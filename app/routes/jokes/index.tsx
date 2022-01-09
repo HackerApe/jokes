@@ -11,6 +11,7 @@ const getRandomJoke = async () => {
     take: 1,
     skip: randomRowNumber
   })
+  return randomJoke
 }
 
 type LoaderData = { randomJoke: Joke }
