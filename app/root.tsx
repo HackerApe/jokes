@@ -67,19 +67,20 @@ const Document: FunctionComponent = ({ children }: PropsWithChildren<{}>) => {
   )
 }
 
-const Layout: FunctionComponent = ({ children }: PropsWithChildren<{}>) => {
-  return (
-    <>
-      <nav>
-        <ul>
-          <li>
-            <Link to='/'>J🤪kes</Link>
-          </li>
-        </ul>
-      </nav>
-      {children}
-    </>
-  )
-}
+// TODO - edit
+// const Layout: FunctionComponent = ({ children }: PropsWithChildren<{}>) => {
+//   return (
+//     <>
+//       <nav>
+//         <ul>
+//           <li>
+//             <Link to='/'>J🤪kes</Link>
+//           </li>
+//         </ul>
+//       </nav>
+//       {children}
+//     </>
+//   )
+// }
 
 export default App

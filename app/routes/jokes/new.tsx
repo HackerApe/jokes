@@ -2,6 +2,7 @@ import type { FunctionComponent } from "react"
 import { ActionFunction, json, redirect, useActionData } from "remix"
 import type { Joke } from "@prisma/client"
 import { db } from "~/utils/db.server"
+import { getUserSession, requireUserId } from "~/utils/session.server"
 
 const validateJokeName = (jokeName: string) => {
   if (jokeName.length < 2) return "That's too short for name..."
@@ -26,6 +27,7 @@ const badRequest = (data: ActionData) => json(data, { status: 400 })
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData()
+  const userId = await requireUserId(request)
 
   const name = form.get("jokeName")
   const content = form.get("jokeContent")
@@ -42,13 +44,15 @@ export const action: ActionFunction = async ({ request }) => {
   if (Object.values(fieldErrors).some(Boolean))
     return badRequest({ fieldErrors, fields })
 
-  const newJoke: Joke = await db.joke.create({ data: { name, content } })
+  const newJoke: Joke = await db.joke.create({
+    data: { ...fields, jokesterId: userId }
+  })
 
   return redirect(`/jokes/${newJoke.id}`)
 }
 
 const NewPost: FunctionComponent = () => {
-  const actionData: ActionData = useActionData()
+  const actionData = useActionData<ActionData>()
 
   return (
     <div>
@@ -62,7 +66,8 @@ const NewPost: FunctionComponent = () => {
               name='jokeName'
               id='jokeName'
               defaultValue={actionData?.fields?.name}
-              aria-invalid={
+              aria-invalid={Boolean(actionData?.fieldErrors?.name) || undefined}
+              aria-describedby={
                 Boolean(actionData?.fieldErrors?.name)
                   ? "name-error"
                   : undefined

@@ -6,11 +6,14 @@ import { Joke } from "@prisma/client"
 
 const getRandomJoke = async () => {
   const count = await db.joke.count()
+
   const randomRowNumber = Math.floor(Math.random() * count)
+
   const [randomJoke] = await db.joke.findMany({
     take: 1,
     skip: randomRowNumber
   })
+
   return randomJoke
 }
 
@@ -23,6 +26,7 @@ export const loader: LoaderFunction = async () => {
 
 const JokesList: FunctionComponent = () => {
   const data = useLoaderData()
+
   return (
     <div>
       <p>Here's a random joke:</p>
