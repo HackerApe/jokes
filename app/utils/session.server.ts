@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs"
 import { createCookieSessionStorage, redirect } from "remix"
 import { db } from "~/utils/db.server"
 
-type LoginForm = {
+type AuthType = {
   username: string
   password: string
 }
@@ -11,7 +11,12 @@ type LoginForm = {
 const SESSION_SECRET = process.env.SESSION_SECRET
 if (!SESSION_SECRET) throw new Error("SESSION_SECRET must be set")
 
-export const login = async ({ username, password }: LoginForm) => {
+export const register = async ({ username, password }: AuthType) => {
+  const passwordHash = await bcrypt.hash(password, 10)
+  return db.user.create({ data: { username, passwordHash } })
+}
+
+export const login = async ({ username, password }: AuthType) => {
   const user = await db.user.findUnique({ where: { username } })
 
   if (!user) return null
@@ -72,7 +77,7 @@ export const requireUserId = async (
 
 export const logout = async (request: Request) => {
   const session = await storage.getSession(request.headers.get("Cookie"))
-  return redirect("/login", {
+  return redirect("/auth/login", {
     headers: { "Set-Cookie": await storage.destroySession(session) }
   })
 }

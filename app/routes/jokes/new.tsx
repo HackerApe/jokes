@@ -115,4 +115,12 @@ const NewPost: FunctionComponent = () => {
   )
 }
 
+export const ErrorBoundary = () => {
+  return (
+    <div className='error-container'>
+      An unexpected error occured. Sorry about that
+    </div>
+  )
+}
+
 export default NewPost

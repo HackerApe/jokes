@@ -66,16 +66,6 @@ body {
   min-height: calc(100vh - env(safe-area-inset-bottom));
 }
 
-a {
-  color: var(--color-links);
-  text-decoration: none;
-}
-
-a:hover {
-  color: var(--color-links-hover);
-  text-decoration: underline;
-}
-
 hr {
   display: block;
   height: 1px;
@@ -352,4 +342,11 @@ label > [type="radio"] {
   background-color: hsla(356, 77%, 59%, 0.747);
   border-radius: 0.25rem;
   padding: 0.5rem 1rem;
+}
+
+.nav-link {
+  border-radius: 3px;
+  background-color: rgb(0, 17, 255);
+  color: rgb(255, 251, 0);
+  margin-right: 10px;
 }

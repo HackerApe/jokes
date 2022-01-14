@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from "remix"
+import { Link, useLoaderData, useCatch } from "remix"
 import type { FunctionComponent } from "react"
 import type { LoaderFunction } from "remix"
 import { db } from "~/utils/db.server"
@@ -13,6 +13,9 @@ const getRandomJoke = async () => {
     take: 1,
     skip: randomRowNumber
   })
+
+  if (!randomJoke)
+    throw new Response("No random joke was found...", { status: 404 })
 
   return randomJoke
 }
@@ -34,6 +37,19 @@ const JokesList: FunctionComponent = () => {
       <Link to={data.randomJoke.id}>"{data.randomJoke.name}" Permalink</Link>
     </div>
   )
+}
+
+export const ErrorBoundary: FunctionComponent = () => (
+  <div className='error-container'>I did a whoopies...</div>
+)
+
+export const CatchBoundary = () => {
+  const caught = useCatch()
+
+  if (caught.status === 404)
+    return <div className='error-container'>There are no jokes to display</div>
+
+  throw new Error(`Unhandled caught response with status ${caught.status}`)
 }
 
 export default JokesList
